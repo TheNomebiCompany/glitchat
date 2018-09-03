@@ -1,1 +1,2 @@
-# glitchat
+# Glitchat
+Instant Slow Chat
