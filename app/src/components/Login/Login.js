@@ -23,7 +23,7 @@ export default class extends React.Component {
     console.log(this.props)
 
     return (
-      <div>
+      <div className='row'>
         <input type='email'
             onChange={ e => this.handleEmailChange(e.target.value) }/>
         <input type='password'

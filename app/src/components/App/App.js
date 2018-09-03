@@ -1,16 +1,22 @@
 import React, { Component } from 'react'
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import logo from '../../logo.svg'
 import './App.css'
-import Login from '../Login/Login';
-import Main from '../Main/Main';
+import Login from '../Login/Login'
+import Navbar from '../Navbar/Navbar'
+import RoomList from '../RoomList/RoomList'
+import roomListMoqup from './roomList.moqup'
+import Room from '../Room/Room';
+import roomsMoqup from './rooms.moqup';
 
 class App extends Component {
   constructor() {
     super()
     this.state = {
-      user: null
+      user: null,
+      view: null,
+      roomId: null,
+      room: null
     }
   }
 
@@ -18,7 +24,10 @@ class App extends Component {
     const self = this
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-        self.setState({ user })
+        self.setState({ 
+          user,
+          view: 'list'
+        })
       } else {
         self.setState({ user: null })
       }
@@ -43,30 +52,42 @@ class App extends Component {
     )
   }
 
+  handleRoomEnter(roomId) {
+    // todo : replace avec l'appel API
+    this.setState({
+      view: 'room',
+      roomId,
+      room: roomsMoqup[roomId]
+    })
+  }
+
+  handleRoomLeave() {
+    this.setState({
+      view: 'list',
+      roomId: null
+    })
+  }
+
   render() {
-    const { user } = this.state
+    const { user, view, room } = this.state
 
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p> 
-        {
-          !user && (
-            <Login signIn={ this.handleSignIn.bind(this) }
-                signUp={ this.handleSignUp.bind(this) }/>
-          )
-        }
-        {
-          user && (
-            <Main user={ user }
-                signOut={ this.handleSignOut.bind(this) }/>
-          )
-        }
+      <div className='app container'>
+        <Navbar user={ user }
+            signOut={ this.handleSignOut.bind(this) }/>
+        <div className='main container'>
+          {
+            !user ? (
+              <Login signIn={ this.handleSignIn.bind(this) }
+                  signUp={ this.handleSignUp.bind(this) }/>
+            ) : view === 'list' ? (
+              <RoomList rooms={ roomListMoqup }
+                  enterRoom={ this.handleRoomEnter.bind(this) }/>
+            ) : (
+              <Room { ...room } />
+            )
+          }
+        </div>
       </div>
     );
   }
