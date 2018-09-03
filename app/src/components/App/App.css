@@ -1,0 +1,9 @@
+.app {
+  margin-top: 15vh;
+  border: black solid 1px;
+}
+
+.app > .main {
+  padding: 5vw;
+  box-sizing: border-box;
+}
