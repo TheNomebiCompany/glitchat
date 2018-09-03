@@ -1,2 +1,2 @@
 # Glitchat
-The future of chat application
+Instant Slow Chat
